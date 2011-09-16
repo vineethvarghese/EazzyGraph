@@ -10,8 +10,8 @@ import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.kernel.Traversal;
 
 import static org.neo4j.graphdb.traversal.Evaluators.atDepth;
-import static org.tenxperts.Neo4jTryOuts.Edges.LINKED_TO;
-import static org.tenxperts.Neo4jTryOuts.Edges.ROUTES;
+import static org.tenxperts.Neo4jTryOutsTest.Edges.LINKED_TO;
+import static org.tenxperts.Neo4jTryOutsTest.Edges.ROUTES;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,7 +20,7 @@ import static org.tenxperts.Neo4jTryOuts.Edges.ROUTES;
  * Time: 2:44 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Neo4jTryOuts {
+public class Neo4jTryOutsTest {
 
     GraphDb graphDb;
 
@@ -77,6 +77,7 @@ public class Neo4jTryOuts {
                 silkBoard.setProperty("name", "Silk Board");
                 bommanahalli.createRelationshipTo(silkBoard, LINKED_TO);
 
+
                 Node hsr = graphDatabaseService.createNode();
                 hsr.setProperty("name", "HSR");
                 silkBoard.createRelationshipTo(hsr, LINKED_TO);
@@ -89,6 +90,7 @@ public class Neo4jTryOuts {
                 koramangala.setProperty("name", "Koramangala");
                 madiwala.createRelationshipTo(koramangala, LINKED_TO);
                 hsr.createRelationshipTo(koramangala, LINKED_TO);
+                bommanahalli.createRelationshipTo(koramangala,LINKED_TO);
                 return null;
             }
         });
