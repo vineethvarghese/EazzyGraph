@@ -11,18 +11,18 @@ public class GraphDb {
         graphDb = new EmbeddedGraphDatabase("/home/vineeth/Workspace/Neo4jDB/EazzyBus");
     }
 
-    void doInTx(Work work) {
+    public <T> T doInTx(Work<T> work) {
         Transaction transaction = graphDb.beginTx();
         try {
-            work.doWork(graphDb);
+            T obj = work.doWork(graphDb);
             transaction.success();
+            return obj;
         } catch (Exception e) {
             transaction.failure();
             throw new RuntimeException(e);
         } finally {
             transaction.finish();
         }
-
     }
 
     public void close() {

@@ -4,10 +4,12 @@ package org.tenxperts;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.traversal.TraversalDescription;
+import org.neo4j.graphdb.traversal.Traverser;
+import org.neo4j.kernel.Traversal;
 
+import static org.neo4j.graphdb.traversal.Evaluators.atDepth;
 import static org.tenxperts.Neo4jTryOuts.Edges.LINKED_TO;
 import static org.tenxperts.Neo4jTryOuts.Edges.ROUTES;
 
@@ -34,12 +36,35 @@ public class Neo4jTryOuts {
 
     @Test
     public void createAndQuery() {
-        create();
+        if (!dataInPlace()) {
+            create();
+        }
         query();
     }
+
+    private boolean dataInPlace() {
+        return graphDb.doInTx(new Work<Boolean>() {
+            public Boolean doWork(GraphDatabaseService graphDatabaseService) {
+                /**
+                 * Create a traverser that starts searching from the root node for relationship ROUTES
+                 * only till a depth 1
+                 */
+                TraversalDescription traversal = Traversal.description().
+                        breadthFirst().
+                        relationships(ROUTES, Direction.OUTGOING).
+                        evaluator(atDepth(1));
+                Traverser traverser = traversal.traverse(graphDatabaseService.getReferenceNode());
+                for (Path path : traverser) {
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
     private void create() {
-        graphDb.doInTx(new Work() {
-            public void doWork(GraphDatabaseService graphDatabaseService) {
+        graphDb.doInTx(new Work<Void>() {
+            public Void doWork(GraphDatabaseService graphDatabaseService) {
                 Node ecity = graphDatabaseService.createNode();
                 ecity.setProperty("name", "Electronic City");
                 graphDatabaseService.getReferenceNode().createRelationshipTo(ecity, ROUTES);
@@ -64,15 +89,27 @@ public class Neo4jTryOuts {
                 koramangala.setProperty("name", "Koramangala");
                 madiwala.createRelationshipTo(koramangala, LINKED_TO);
                 hsr.createRelationshipTo(koramangala, LINKED_TO);
+                return null;
             }
         });
 
     }
 
     private void query() {
-        graphDb.doInTx(new Work() {
-            public void doWork(GraphDatabaseService graphDatabaseService) {
+        graphDb.doInTx(new Work<Void>() {
+            public Void doWork(GraphDatabaseService graphDatabaseService) {
                 Node referenceNode = graphDatabaseService.getReferenceNode();
+                org.neo4j.graphdb.Traverser traverser = referenceNode.traverse(org.neo4j.graphdb.Traverser.Order.BREADTH_FIRST,
+                        StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL,
+                        ROUTES, Direction.OUTGOING);
+                for (Node node : traverser) {
+                    if (node.hasProperty("name")) {
+                        System.out.println(node.getProperty("name"));
+                    } else {
+                        System.out.println("No name for Node : " + node);
+                    }
+                }
+                return null;
             }
         });
     }

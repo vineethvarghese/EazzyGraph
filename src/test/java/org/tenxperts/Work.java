@@ -9,9 +9,9 @@ import org.neo4j.graphdb.GraphDatabaseService;
  * Time: 3:09 PM
  * To change this template use File | Settings | File Templates.
  */
-interface Work {
+interface Work<T> {
 
-    void doWork(GraphDatabaseService graphDatabaseService);
+     T doWork(GraphDatabaseService graphDatabaseService);
 
 }
 
