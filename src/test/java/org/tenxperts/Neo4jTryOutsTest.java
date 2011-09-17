@@ -1,13 +1,13 @@
 package org.tenxperts;
 
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.kernel.Traversal;
+import scala.Int;
 
 import static org.neo4j.graphdb.traversal.Evaluators.atDepth;
 import static org.tenxperts.Neo4jTryOutsTest.Edges.LINKED_TO;
@@ -27,19 +27,12 @@ public class Neo4jTryOutsTest {
     @Before
     public void init() {
         graphDb = new GraphDb();
+        create();
     }
 
     @After
     public void destroy() {
         graphDb.close();
-    }
-
-    @Test
-    public void createAndQuery() {
-        if (!dataInPlace()) {
-            create();
-        }
-        query();
     }
 
     private boolean dataInPlace() {
@@ -63,6 +56,9 @@ public class Neo4jTryOutsTest {
     }
 
     private void create() {
+        if (dataInPlace()) {
+            return;
+        }
         graphDb.doInTx(new Work<Void>() {
             public Void doWork(GraphDatabaseService graphDatabaseService) {
                 Node ecity = graphDatabaseService.createNode();
@@ -90,26 +86,31 @@ public class Neo4jTryOutsTest {
                 koramangala.setProperty("name", "Koramangala");
                 madiwala.createRelationshipTo(koramangala, LINKED_TO);
                 hsr.createRelationshipTo(koramangala, LINKED_TO);
-                bommanahalli.createRelationshipTo(koramangala,LINKED_TO);
+                bommanahalli.createRelationshipTo(koramangala, LINKED_TO);
                 return null;
             }
         });
 
     }
 
-    private void query() {
+    @Test
+    public void query() {
         graphDb.doInTx(new Work<Void>() {
             public Void doWork(GraphDatabaseService graphDatabaseService) {
-                Node referenceNode = graphDatabaseService.getReferenceNode();
-                org.neo4j.graphdb.Traverser traverser = referenceNode.traverse(org.neo4j.graphdb.Traverser.Order.BREADTH_FIRST,
-                        StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL,
-                        ROUTES, Direction.OUTGOING);
-                for (Node node : traverser) {
-                    if (node.hasProperty("name")) {
-                        System.out.println(node.getProperty("name"));
-                    } else {
-                        System.out.println("No name for Node : " + node);
+                TraversalDescription traversalDescription = Traversal.description().
+                        depthFirst().
+                        relationships(LINKED_TO, Direction.OUTGOING).
+                        relationships(ROUTES, Direction.OUTGOING).
+                        evaluator(Evaluators.all());
+                Traverser traverse = traversalDescription.traverse(graphDatabaseService.getReferenceNode());
+                int pathCount = 1;
+                for (Path path : traverse) {
+                    System.out.println(" ************ Path " + pathCount + " ************" );
+                    Iterable<Node> nodes = path.nodes();
+                    for (Node node : nodes) {
+                        System.out.println(node.getProperty("name", "Root NodeR"));
                     }
+                    pathCount++;
                 }
                 return null;
             }
@@ -120,8 +121,6 @@ public class Neo4jTryOutsTest {
         LINKED_TO,
         ROUTES;
     }
-
-
 
 
 }
