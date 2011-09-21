@@ -1,5 +1,9 @@
 package org.tenxperts.eazzybus.domain;
 
+import org.springframework.data.neo4j.annotation.EndNode;
+import org.springframework.data.neo4j.annotation.RelationshipEntity;
+import org.springframework.data.neo4j.annotation.StartNode;
+
 /**
  * Created by IntelliJ IDEA.
  * User: vineeth
@@ -7,15 +11,16 @@ package org.tenxperts.eazzybus.domain;
  * Time: 4:32 PM
  * To change this template use File | Settings | File Templates.
  */
+@RelationshipEntity
 public class Path {
 
     private float distance;
 
     private String name;
 
-    private BusStop startingStop;
+    @StartNode private BusStop startingStop;
 
-    private BusStop endingStop;
+    @EndNode private BusStop endingStop;
 
     public float getDistance() {
         return distance;
