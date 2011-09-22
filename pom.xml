@@ -35,6 +35,13 @@
             <version>${spring.graph.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.6.12.M1</version>
+        </dependency>
+
+
         <!-- ################ Test ###############    -->
         <dependency>
             <groupId>junit</groupId>
@@ -98,5 +105,12 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>spring-maven-milestone</id>
+            <name>Springframework Maven Repository</name>
+            <url>http://maven.springframework.org/milestone</url>
+        </repository>
+    </repositories>
 
 </project>

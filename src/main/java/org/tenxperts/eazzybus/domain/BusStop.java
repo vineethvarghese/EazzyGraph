@@ -3,6 +3,7 @@ package org.tenxperts.eazzybus.domain;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
+import org.springframework.data.neo4j.core.Direction;
 
 import java.util.Set;
 
@@ -23,11 +24,13 @@ public class BusStop {
     @Indexed
     private String name;
 
-    @RelatedTo
+    @RelatedTo(elementClass = BusStop.class, type = "ROAD", direction = Direction.INCOMING)
     private Set<BusStop> fromStops;
 
+    @RelatedTo(elementClass = BusStop.class, type = "ROAD", direction = Direction.OUTGOING)
     private Set<BusStop> toStops;
 
+    @RelatedTo(elementClass = Route.class, type = "SERVICED_BY", direction = Direction.BOTH)
     private Set<Route> servicedByRoutes;
 
     public Long getId() {
