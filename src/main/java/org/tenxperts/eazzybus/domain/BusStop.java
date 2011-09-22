@@ -1,5 +1,9 @@
 package org.tenxperts.eazzybus.domain;
 
+import org.springframework.data.neo4j.annotation.Indexed;
+import org.springframework.data.neo4j.annotation.NodeEntity;
+import org.springframework.data.neo4j.annotation.RelatedTo;
+
 import java.util.Set;
 
 /**
@@ -9,13 +13,30 @@ import java.util.Set;
  * Time: 4:31 PM
  * To change this template use File | Settings | File Templates.
  */
+
+@NodeEntity
 public class BusStop {
 
+    @Indexed
+    private Long id;
+
+    @Indexed
     private String name;
 
-    private Set<Path> fromPaths;
+    @RelatedTo
+    private Set<BusStop> fromStops;
 
-    private Set<Path> toPaths;
+    private Set<BusStop> toStops;
+
+    private Set<Route> servicedByRoutes;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -25,19 +46,27 @@ public class BusStop {
         this.name = name;
     }
 
-    public Set<Path> getFromPaths() {
-        return fromPaths;
+    public Set<BusStop> getFromStops() {
+        return fromStops;
     }
 
-    public void setFromPaths(Set<Path> fromPaths) {
-        this.fromPaths = fromPaths;
+    public void setFromStops(Set<BusStop> fromStops) {
+        this.fromStops = fromStops;
     }
 
-    public Set<Path> getToPaths() {
-        return toPaths;
+    public Set<BusStop> getToStops() {
+        return toStops;
     }
 
-    public void setToPaths(Set<Path> toPaths) {
-        this.toPaths = toPaths;
+    public void setToStops(Set<BusStop> toStops) {
+        this.toStops = toStops;
+    }
+
+    public Set<Route> getServicedByRoutes() {
+        return servicedByRoutes;
+    }
+
+    public void setServicedByRoutes(Set<Route> servicedByRoutes) {
+        this.servicedByRoutes = servicedByRoutes;
     }
 }
