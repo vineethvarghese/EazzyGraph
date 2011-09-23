@@ -3,6 +3,7 @@ package org.tenxperts.eazzybus.domain;
 import org.springframework.data.neo4j.annotation.EndNode;
 import org.springframework.data.neo4j.annotation.RelationshipEntity;
 import org.springframework.data.neo4j.annotation.StartNode;
+import org.springframework.data.neo4j.core.RelationshipBacked;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,7 +13,7 @@ import org.springframework.data.neo4j.annotation.StartNode;
  * To change this template use File | Settings | File Templates.
  */
 @RelationshipEntity
-public class Path {
+public class Path implements RelationshipBacked {
 
     private float distance;
 

@@ -4,6 +4,7 @@ import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
 import org.springframework.data.neo4j.core.Direction;
+import org.springframework.data.neo4j.core.NodeBacked;
 
 import java.util.Set;
 
@@ -16,12 +17,12 @@ import java.util.Set;
  */
 
 @NodeEntity
-public class BusStop {
+public class BusStop implements NodeBacked {
 
     @Indexed
     private Long id;
 
-    @Indexed
+    @Indexed(fulltext = true, indexName = "bus_stop_name")
     private String name;
 
     @RelatedTo(elementClass = BusStop.class, type = "ROAD", direction = Direction.INCOMING)
@@ -32,6 +33,7 @@ public class BusStop {
 
     @RelatedTo(elementClass = Route.class, type = "SERVICED_BY", direction = Direction.BOTH)
     private Set<Route> servicedByRoutes;
+
 
     public Long getId() {
         return id;

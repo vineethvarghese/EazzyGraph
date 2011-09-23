@@ -6,3 +6,4 @@ target
 *.iws
 .gradle
 build
+data

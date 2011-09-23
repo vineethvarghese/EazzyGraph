@@ -2,9 +2,10 @@ package org.tenxperts.eazzybus.domain;
 
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
+import org.springframework.data.neo4j.core.NodeBacked;
 
 @NodeEntity
-public class Route {
+public class Route implements NodeBacked {
 
     @Indexed
     private Long id;
