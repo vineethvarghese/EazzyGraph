@@ -2,6 +2,7 @@ package org.tenxperts.eazzybus.domain;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.neo4j.helpers.collection.ClosableIterable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -31,5 +32,11 @@ public class BusStopTest {
         busStop.persist();
 
         BusStop value = busStopRepository.findByPropertyValue("bus_stop_name", "name", "Madiwala");
+        ClosableIterable<BusStop> byQuery = busStopRepository.findAllByQuery("bus_stop_name", "name", "M*");
+        for (BusStop b : byQuery) {
+            System.out.println(b.getName());
+
+        }
+
     }
 }
