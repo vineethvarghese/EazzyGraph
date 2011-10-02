@@ -1,9 +1,10 @@
-package org.tenxperts.eazzybus.domain;
+package org.tenxperts.eazzybus.domain.impl;
 
 import org.springframework.data.neo4j.annotation.EndNode;
 import org.springframework.data.neo4j.annotation.RelationshipEntity;
 import org.springframework.data.neo4j.annotation.StartNode;
 import org.springframework.data.neo4j.core.RelationshipBacked;
+import org.tenxperts.eazzybus.domain.impl.BusStopImpl;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,9 +20,9 @@ public class Path implements RelationshipBacked {
 
     private String name;
 
-    @StartNode private BusStop startingStop;
+    @StartNode private BusStopImpl startingStop;
 
-    @EndNode private BusStop endingStop;
+    @EndNode private BusStopImpl endingStop;
 
     public float getDistance() {
         return distance;
@@ -39,19 +40,19 @@ public class Path implements RelationshipBacked {
         this.name = name;
     }
 
-    public BusStop getStartingStop() {
+    public BusStopImpl getStartingStop() {
         return startingStop;
     }
 
-    public void setStartingStop(BusStop startingStop) {
+    public void setStartingStop(BusStopImpl startingStop) {
         this.startingStop = startingStop;
     }
 
-    public BusStop getEndingStop() {
+    public BusStopImpl getEndingStop() {
         return endingStop;
     }
 
-    public void setEndingStop(BusStop endingStop) {
+    public void setEndingStop(BusStopImpl endingStop) {
         this.endingStop = endingStop;
     }
 }

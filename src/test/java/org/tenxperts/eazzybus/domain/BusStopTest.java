@@ -6,9 +6,10 @@ import org.neo4j.helpers.collection.ClosableIterable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.tenxperts.eazzybus.domain.impl.BusStopImpl;
 import org.tenxperts.eazzybus.repository.BusStopRepository;
+import org.tenxperts.eazzybus.service.RouteService;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,16 +25,19 @@ public class BusStopTest {
 
     @Autowired BusStopRepository busStopRepository;
 
+    @Autowired
+    RouteService routeService;
+
     @Test
     public void testBusStopCreation() {
-        BusStop busStop = new BusStop();
+        BusStopImpl busStop = new BusStopImpl();
         busStop.setId(1l);
         busStop.setName("Madiwala");
         busStop.persist();
 
-        BusStop value = busStopRepository.findByPropertyValue("bus_stop_name", "name", "Madiwala");
-        ClosableIterable<BusStop> byQuery = busStopRepository.findAllByQuery("bus_stop_name", "name", "M*");
-        for (BusStop b : byQuery) {
+        BusStopImpl value = busStopRepository.findByPropertyValue("bus_stop_name", "name", "Madiwala");
+        ClosableIterable<BusStopImpl> byQuery = busStopRepository.findAllByQuery("bus_stop_name", "name", "M*");
+        for (BusStopImpl b : byQuery) {
             System.out.println(b.getName());
 
         }

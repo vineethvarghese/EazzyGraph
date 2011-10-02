@@ -1,31 +1,19 @@
 package org.tenxperts.eazzybus.domain;
 
-import org.springframework.data.neo4j.annotation.Indexed;
-import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.data.neo4j.core.NodeBacked;
+/**
+ * Created by IntelliJ IDEA.
+ * User: vineeth
+ * Date: 10/3/11
+ * Time: 1:06 AM
+ * To change this template use File | Settings | File Templates.
+ */
+public interface Route {
 
-@NodeEntity
-public class Route implements NodeBacked {
+    Long getId();
 
-    @Indexed
-    private Long id;
+    void setId(Long id);
 
-    @Indexed
-    private String name;
+    String getName();
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    void setName(String name);
 }

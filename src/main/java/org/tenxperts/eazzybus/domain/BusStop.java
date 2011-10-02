@@ -1,77 +1,36 @@
 package org.tenxperts.eazzybus.domain;
 
-import org.springframework.data.neo4j.annotation.Indexed;
-import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.data.neo4j.annotation.RelatedTo;
-import org.springframework.data.neo4j.core.Direction;
-import org.springframework.data.neo4j.core.NodeBacked;
+import org.tenxperts.eazzybus.domain.impl.BusStopImpl;
+import org.tenxperts.eazzybus.domain.impl.RouteImpl;
 
 import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
  * User: vineeth
- * Date: 9/21/11
- * Time: 4:31 PM
+ * Date: 10/3/11
+ * Time: 1:08 AM
  * To change this template use File | Settings | File Templates.
  */
+public interface BusStop<B extends BusStop, R extends Route> {
 
-@NodeEntity
-public class BusStop implements NodeBacked {
+    Long getId();
 
-    @Indexed
-    private Long id;
+    void setId(Long id);
 
-    @Indexed(fulltext = true, indexName = "bus_stop_name")
-    private String name;
+    String getName();
 
-    @RelatedTo(elementClass = BusStop.class, type = "ROAD", direction = Direction.INCOMING)
-    private Set<BusStop> fromStops;
+    void setName(String name);
 
-    @RelatedTo(elementClass = BusStop.class, type = "ROAD", direction = Direction.OUTGOING)
-    private Set<BusStop> toStops;
+    Set<B> getFromStops();
 
-    @RelatedTo(elementClass = Route.class, type = "SERVICED_BY", direction = Direction.BOTH)
-    private Set<Route> servicedByRoutes;
+    void setFromStops(Set<B> fromStops);
 
+    Set<B> getToStops();
 
-    public Long getId() {
-        return id;
-    }
+    void setToStops(Set<B> toStops);
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    Set<R> getServicedByRoutes();
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<BusStop> getFromStops() {
-        return fromStops;
-    }
-
-    public void setFromStops(Set<BusStop> fromStops) {
-        this.fromStops = fromStops;
-    }
-
-    public Set<BusStop> getToStops() {
-        return toStops;
-    }
-
-    public void setToStops(Set<BusStop> toStops) {
-        this.toStops = toStops;
-    }
-
-    public Set<Route> getServicedByRoutes() {
-        return servicedByRoutes;
-    }
-
-    public void setServicedByRoutes(Set<Route> servicedByRoutes) {
-        this.servicedByRoutes = servicedByRoutes;
-    }
+    void setServicedByRoutes(Set<R> servicedByRoutes);
 }
