@@ -12,8 +12,7 @@ import org.neo4j.kernel.Traversal;
 import scala.Int;
 
 import static org.neo4j.graphdb.traversal.Evaluators.atDepth;
-import static org.tenxperts.Neo4jTryOutsTest.Edges.LINKED_TO;
-import static org.tenxperts.Neo4jTryOutsTest.Edges.ROUTES;
+import static org.tenxperts.Neo4jTryOutsTest.Edges.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -127,8 +126,56 @@ public class Neo4jTryOutsTest {
         });
     }
 
+    @Test
+    public void pathTest() {
+        graphDb.doInTx(new Work<Void>() {
+            @Override
+            public Void doWork(GraphDatabaseService graphDatabaseService) {
+                final Node referenceNode = graphDatabaseService.getReferenceNode();
+
+                Node persons = graphDatabaseService.createNode();
+                referenceNode.createRelationshipTo(persons, PERSONS);
+
+                final Node person1 = graphDatabaseService.createNode();
+                person1.setProperty("name", "Selva");
+                persons.createRelationshipTo(person1, FRIEND);
+
+                final Node person2 = graphDatabaseService.createNode();
+                person2.setProperty("name", "Vineeth");
+                person1.createRelationshipTo(person2, FRIEND);
+
+                final Node person3 = graphDatabaseService.createNode();
+                person3.setProperty("name", "Raj");
+                person2.createRelationshipTo(person3, FRIEND);
+
+                return null;
+            }
+        });
+        graphDb.doInTx(new Work<Void>() {
+            @Override
+            public Void doWork(GraphDatabaseService graphDatabaseService) {
+                final TraversalDescription description = Traversal.description().
+                        depthFirst().
+                        relationships(FRIEND, Direction.OUTGOING).
+                        evaluator(Evaluators.excludeStartPosition());
+                final Node persons = graphDatabaseService.getReferenceNode().
+                        getSingleRelationship(PERSONS, Direction.OUTGOING).getEndNode();
+                final Traverser traverser = description.traverse(persons);
+                for (Path path : traverser) {
+                    System.out.println("---------------------");
+                    for (Node node : path.nodes()) {
+                        System.out.println(node.getProperty("name", "PERSONS"));
+                    }
+                }
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+        });
+    }
+
     enum Edges implements RelationshipType {
         LINKED_TO,
+        FRIEND,
+        PERSONS,
         ROUTES;
     }
 
